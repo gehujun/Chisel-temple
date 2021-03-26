@@ -16,6 +16,7 @@ class GCD extends Module {
     val loadingValues = Input(Bool())
     val outputGCD     = Output(UInt(16.W))
     val outputValid   = Output(Bool())
+    
   })
 
   val x  = Reg(UInt())
@@ -30,5 +31,6 @@ class GCD extends Module {
   }
 
   io.outputGCD := x
-  io.outputValid := y === 0.U
+  io.outputValid := y === 0.U  
+
 }
