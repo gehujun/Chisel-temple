@@ -2,6 +2,7 @@
 1. chisel tutorial
 2. chisel-book
 3. 西交大的博客
+4. chisel_cheatSheet
 
 开发日记：
 3/26
