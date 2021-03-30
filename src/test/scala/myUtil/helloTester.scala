@@ -11,15 +11,6 @@ import chisel3.iotesters.{PeekPokeTester, Driver, ChiselFlatSpec}
 // //   println("Result is: " + peek(h.io.c).toString)
 // }
 
-object helloTests extends App{
-    chisel3.iotesters.Driver.execute(args,() => new hello())(c=>new helloTests(c))
-
-    // chisel3.iotesters.Driver(() => new hello()){ c =>
-    // new helloTests(c)
-  // }
-
-}
-
 // class helloTest
 
 class helloTests(h:hello) extends PeekPokeTester(h){
@@ -36,4 +27,13 @@ class helloTester extends ChiselFlatSpec {
       Driver(() => new hello, backend)(c => new helloTests(c)) should be (true)
     }
   }
+}
+
+object helloTests extends App{
+    chisel3.iotesters.Driver.execute(args,() => new hello())(c=>new helloTests(c))
+
+    // chisel3.iotesters.Driver(() => new hello()){ c =>
+    // new helloTests(c)
+  // }
+
 }

@@ -57,6 +57,8 @@ object Driver {
             setupIVLBackend(dutGenerator, optionsManager)
           case "vcs" =>
             setupVCSBackend(dutGenerator, optionsManager)
+          case "vsim" =>
+            setupVSIMBackend(dutGenerator, optionsManager)
           case _ =>
             throw new Exception(s"Unrecognized backend name ${testerOptions.backendName}")
         }
@@ -70,6 +72,7 @@ object Driver {
               backend match {
                 case b: IVLBackend => TesterProcess.kill(b)
                 case b: VCSBackend => TesterProcess.kill(b)
+                case b: VSIMBackend => TesterProcess.kill(b)
                 case b: VerilatorBackend => TesterProcess.kill(b)
                 case _ =>
               }
@@ -210,10 +213,11 @@ object Driver {
     *
 
     * @param dutGen      This is the device under test.
-    * @param backendType The default backend is "firrtl" which uses the firrtl interperter. Other options
+    * @param backendType The default backend is "firrtl" which uses the firrtl interpreter. Other options
     *                    "verilator" will use the verilator c++ simulation generator
     *                    "ivl" will use the Icarus Verilog simulation
     *                    "vcs" will use the VCS simulation
+    *                    "vsim" will use the ModelSim/QuestaSim simulation
     * @param verbose     Setting this to true will make the tester display information on peeks,
     *                    pokes, steps, and expects.  By default only failed expects will be printed
     * @param testerSeed  Set the random number generator seed
@@ -251,6 +255,8 @@ object Driver {
           case Some(b: IVLBackend) =>
             TesterProcess kill b
           case Some(b: VCSBackend) =>
+            TesterProcess kill b
+          case Some(b: VSIMBackend) =>
             TesterProcess kill b
           case Some(b: VerilatorBackend) =>
             TesterProcess kill b
