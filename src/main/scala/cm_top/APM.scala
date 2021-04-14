@@ -32,7 +32,7 @@ class APM(val w : Int) extends Module{
   io.dtIndex :=  count
 
   when(io.updateSel){
-    count := Mux((count === 1023.U) , count, count+1.U)
+    //count := Mux((count === 1023.U) , count, count+1.U)
     hashTable(cxtIndex) := (hashTable(cxtIndex) + ((((io.next_y<<22)-outP)>>3) * io.dtNUm) & 0xfffffc00L.U)  | count
     //hashTable(cxtIndex) := hashTable(cxtIndex) + 1.U
   }.otherwise{

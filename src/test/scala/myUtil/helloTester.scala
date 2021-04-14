@@ -21,12 +21,25 @@ class helloTests(h:hello) extends PeekPokeTester(h){
 }
 
 class helloTester extends ChiselFlatSpec {
-    behavior of "helloTester"
-    backends foreach {backend =>
-    it should s"correctly add randomly generated numbers $backend" in {
-      Driver(() => new hello, backend)(c => new helloTests(c)) should be (true)
-    }
-  }
+  //   behavior of "helloTester"
+  //   backends foreach {backend =>
+  //   it should s"correctly add randomly generated numbers $backend" in {
+  //     Driver(() => new hello, backend)(c => new helloTests(c)) should be (true)
+  //   }
+  // }
+
+    "running with --generate-vcd-output on" should "create a vcd file from your test" in {
+        iotesters.Driver.execute(
+            Array(
+                "--generate-vcd-output", "on",
+                "--target-dir", "test_run_dir/sse_vcd",
+                "--top-name", "sse_vcd",
+                ),
+            () => new hello()
+        ) {
+            c => new helloTests(c)
+        } should be(true)
+      }
 }
 
 object helloTests extends App{

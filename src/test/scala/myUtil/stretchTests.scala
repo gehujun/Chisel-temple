@@ -3,10 +3,22 @@ package myUtil
 import chisel3._
 import chisel3.iotesters._
 import chisel3.iotesters.{Driver,PeekPokeTester}
+import scala.io.Source
+import java.nio.file.{Files,Paths}
 
 class stretchTests(s:stretch) extends PeekPokeTester(s){
   // poke(s.io.p,0.S)
   //println("stretch of 0 is : "+ peek(s.io.d).toString)
+  
+  // val byteArray = Files.readAllBytes(Paths.get("/home/ghj/lpaq1/test/hello.txt"))
+  
+  // for(b <- byteArray){
+  //   for(i <- 7 to 0 ){
+  //     //调用cm模型开始执行
+  //     poke(cm.io.y,i)
+  //     step(1)
+  //   }
+  // }
 
   def ScalaSquash(d : Int) : Int = {
       var res = -1
@@ -51,8 +63,17 @@ object stretchTester extends App{
   //               (c=>new stretchTests(c))
   
   //不生成Verilog只生成中间代码的测试
-  chisel3.iotesters.Driver(() => new stretch()){ c =>
-    new stretchTests(c)
-  }
+  // chisel3.iotesters.Driver(() => new stretch()){ c =>
+  //   new stretchTests(c)
+  // }
+
+  // println("文件内容为：")
+  // for(lines <- Source.fromFile("/home/ghj/lpaq1/test/hello.txt").getLines()){
+  //   println(lines)
+  // }
+  
+  
+    
+  
 
 }
