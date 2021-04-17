@@ -13,6 +13,17 @@ class sseTest(apm:apmNoPipeline) extends PeekPokeTester(apm) {
 }
 
 class statemapTest(sm:StateMap) extends PeekPokeTester(sm){
+    poke(sm.io.cx,0)
+    poke(sm.io.y,1)
+    poke(sm.io.Start ,true.B)
+    for(i <-0 to 100){
+        step(1)
+        println("cycles "+ i + " : "+peek(sm.io.Done).toString+" prediction is "+ peek(sm.io.p))
+    }
+    
+}
+
+class memTest(mem:ForwardingMemory) extends PeekPokeTester(mem){
 
 }
 

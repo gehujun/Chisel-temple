@@ -9,3 +9,6 @@
 完成squash模块。
 4/6
 完成APM模块。
+
+4/16
+编写的chisel代码生成的verilog不对，今日未解决。

@@ -3,6 +3,7 @@ package myUtil
 import chisel3._
 import chisel3.iotesters._
 import chisel3.iotesters.{PeekPokeTester, Driver, ChiselFlatSpec}
+import java.io.PrintWriter
 
 // class helloTester(h : hello) extends PeekPokeTester(h){
 //   poke(h.io.a,0.U)
@@ -32,8 +33,8 @@ class helloTester extends ChiselFlatSpec {
         iotesters.Driver.execute(
             Array(
                 "--generate-vcd-output", "on",
-                "--target-dir", "test_run_dir/sse_vcd",
-                "--top-name", "sse_vcd",
+                "--target-dir", "test_run_dir/hello",
+                "--top-name", "hello",
                 ),
             () => new hello()
         ) {
@@ -42,11 +43,14 @@ class helloTester extends ChiselFlatSpec {
       }
 }
 
+import java.io.File
 object helloTests extends App{
-    chisel3.iotesters.Driver.execute(args,() => new hello())(c=>new helloTests(c))
+    //chisel3.iotesters.Driver.execute(args,() => new hello())(c=>new helloTests(c))
 
     // chisel3.iotesters.Driver(() => new hello()){ c =>
     // new helloTests(c)
   // }
+    val writer = new PrintWriter(new File("./text.txt"))
+
 
 }
