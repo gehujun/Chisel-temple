@@ -4,6 +4,7 @@ import chisel3._
 import chisel3.iotesters._
 import chisel3.iotesters.{PeekPokeTester, Driver, ChiselFlatSpec}
 import java.io.PrintWriter
+import scala.io.Source
 
 // class helloTester(h : hello) extends PeekPokeTester(h){
 //   poke(h.io.a,0.U)
@@ -15,10 +16,11 @@ import java.io.PrintWriter
 // class helloTest
 
 class helloTests(h:hello) extends PeekPokeTester(h){
-    poke(h.io.a,0.U)
-    poke(h.io.b,1.U)
-    step(1)
-    println("Result is: " + peek(h.io.c).toString)
+    // poke(h.io.a,0.U)
+    // poke(h.io.b,1.U)
+    // step(1)
+    // println("Result is: " + peek(h.io.c).toString)
+   
 }
 
 class helloTester extends ChiselFlatSpec {
@@ -52,5 +54,18 @@ object helloTests extends App{
   // }
     val writer = new PrintWriter(new File("./text.txt"))
 
+    val source = Source.fromFile("/home/ghj/lpaq1/test/output/predictions.txt")
+    val lines = source.getLines()
+    for(line<-lines){
+        val fields = line.trim.split("\t")
+        print(fields(0).toInt+"#")
+        print(fields(1).toInt+"#")
+        print(fields(2).toInt+"#")
+        print(fields(3).toInt+"#")
+        print(fields(4).toInt+"#")
+        print(fields(5).toInt+"#")
+        print(fields(6).toInt+"#")
+        print("\n")
+    }
 
 }

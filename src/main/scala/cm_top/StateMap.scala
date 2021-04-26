@@ -62,7 +62,7 @@ class StateMap extends Module{
       val Done  = Output(Bool())
 
   })
-  val updateSel = RegInit(false.B)
+  val updateSel = WireDefault(false.B)
   val cx = RegNext(io.cx)
 
   val dt = Wire(Vec(1024,UInt(13.W)))
@@ -93,15 +93,11 @@ class StateMap extends Module{
   val mulFac = dt(count)
   // val mulFac = 8.U
 
-  when(updateSel){
-    hashTable.io.wrEna := true.B    
-    rdata := rdata
-  }.otherwise{  
-    rdata := prediction_count;
-    hashTable.io.wrEna := false.B
-  }
-
-  hashTable.io.wrData := (rdata + ((((io.y<<22)-prediction)>>3) * mulFac) & 0xfffffc00L.U) | newCount
+ 
+  val updateValue = (prediction_count + ((((io.y<<22)-prediction)>>3) * mulFac) & 0xfffffc00L.U) | newCount
+  
+  hashTable.io.wrData := updateValue
+  rdata := Mux(updateSel , updateValue , rdata)
 
   io.p := rdata >> 20
 
@@ -117,16 +113,14 @@ class StateMap extends Module{
       }
     }
     is(stage1) {
-      updateSel := false.B
+      updateSel := true.B
       stateReg := stage2
     }
     is(stage2) {
-      updateSel := true.B
+      updateSel := false.B
       stateReg := stage1
     }
   }
 
   io.Done := stateReg === stage2
-
-
 }

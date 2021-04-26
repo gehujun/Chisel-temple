@@ -8,7 +8,7 @@ import java.nio.file.{Files, Paths}
 
 
 class stateMapCompressionTester(c: naiveCompression) extends PeekPokeTester(c)  {
-  var mode = false //Decompression=false，compression=true
+  var mode = true //Decompression=false，compression=true
   if(mode){
     val byteArray = Files.readAllBytes(Paths.get("/home/ghj/lpaq1/test/hello.txt"))
     //    val writer = new PrintWriter(new File("C:/Users/82459/Desktop/output.txt" ))
@@ -27,11 +27,10 @@ class stateMapCompressionTester(c: naiveCompression) extends PeekPokeTester(c)  
         poke(c.io.i, (b >> (7 - i)) & 1)
         step(1)
         while(peek(c.io.Done).toInt == 0){ //enable为bool的输出，true（1）代表完成了压缩流程，false（0）代表还未完成
-          
-          poke(c.io.mode, 0)
-          poke(c.io.i, (b >> (7 - i)) & 1)
+          // poke(c.io.mode, 0)
+          // poke(c.io.i, (b >> (7 - i)) & 1)
           println("while")
-          poke(c.io.start,true.B)
+          // poke(c.io.start,true.B)
           step(1)
         }
         println("while done")
@@ -80,7 +79,7 @@ class stateMapCompressionTester(c: naiveCompression) extends PeekPokeTester(c)  
     var rbyte : Byte = 0
     var wbyte : Int = 0
     while(index <= byteArray.length) {
-      println(" index is : "+index)
+      // println(" index is : "+index)
       while(((ioflag >> 3) & 1) == 1){
         //        b = byteArray(index)
         if(index < byteArray.length){
@@ -132,8 +131,8 @@ class naiveCompressionTester extends ChiselFlatSpec {
         iotesters.Driver.execute(
             Array(
                 "--generate-vcd-output", "on",
-                "--target-dir", "test_run_dir/naiveCompression",
-                "--top-name", "naiveCompression",
+                "--target-dir", "test_run_dir/compression",
+                "--top-name", "naiveCompression_compre",
                 ),
             () => new naiveCompression()
         ) {
@@ -146,7 +145,7 @@ object CompressionTest_v2 {
   def main(args: Array[String]): Unit = {
     if (!Driver.execute(Array(
                 "--generate-vcd-output", "on",
-                "--target-dir", "test_run_dir/naiveCompression",
+                "--target-dir", "test_run_dir/decompression",
                 "--top-name", "naiveCompression",
                 ),() => new naiveCompression())(c => new stateMapCompressionTester(c))) System.exit(1)
   }

@@ -50,30 +50,28 @@ class stretchTests(s:stretch) extends PeekPokeTester(s){
 
   val table =  ScalaStrectch()
 
-  for(p <- 0 to 4096){
-    poke(s.io.p,p.asSInt)
-    expect(s.io.d,table(p))
+  for(i<-0 to 4096){
+    print(table(i)+" ")
   }
+  // for(p <- 0 to 4096){
+  //   poke(s.io.p,p.asSInt)
+  //   expect(s.io.d,table(p))
+  // }
 
 }
 
 object stretchTester extends App{
-  
+
   // chisel3.iotesters.Driver.execute(args,() => new stretch())
   //               (c=>new stretchTests(c))
   
   //不生成Verilog只生成中间代码的测试
-  // chisel3.iotesters.Driver(() => new stretch()){ c =>
-  //   new stretchTests(c)
-  // }
+  chisel3.iotesters.Driver(() => new stretch()){ c =>
+    new stretchTests(c)
+  }
 
   // println("文件内容为：")
   // for(lines <- Source.fromFile("/home/ghj/lpaq1/test/hello.txt").getLines()){
   //   println(lines)
   // }
-  
-  
-    
-  
-
 }
