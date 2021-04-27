@@ -59,7 +59,7 @@ class mixerTest(mixer : Mixer) extends PeekPokeTester(mixer){
         else
             poke(mixer.io.y,0.U)
         if(peek(mixer.io.Done).toInt == 1)
-            println("mixer's output is "+peek(mixer.io.out)+" y "+fields(8).toInt+" software is : "+fields(9).toInt)
+            println("mixer's output is "+peek(mixer.io.out)+" cxt "+fields(7).toInt+" y "+fields(8).toInt+" software is : "+fields(9).toInt)
         step(2)
     }
 

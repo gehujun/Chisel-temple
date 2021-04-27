@@ -2,14 +2,14 @@
     "version": "1.4.0",
     "project": {
         "name": "chisel-temple",
-        "directory": "/home/ghj/chisel_project/Chisel-temple",
-        "workspaceDir": "/home/ghj/chisel_project/Chisel-temple",
+        "directory": "/home/ghj/chisel-project/Chisel-temple",
+        "workspaceDir": "/home/ghj/chisel-project/Chisel-temple",
         "sources": [
-            "/home/ghj/chisel_project/Chisel-temple/src/main/scala",
-            "/home/ghj/chisel_project/Chisel-temple/src/main/scala-2.12",
-            "/home/ghj/chisel_project/Chisel-temple/src/main/scala-2",
-            "/home/ghj/chisel_project/Chisel-temple/src/main/java",
-            "/home/ghj/chisel_project/Chisel-temple/target/scala-2.12/src_managed/main"
+            "/home/ghj/chisel-project/Chisel-temple/src/main/scala",
+            "/home/ghj/chisel-project/Chisel-temple/src/main/scala-2.12",
+            "/home/ghj/chisel-project/Chisel-temple/src/main/scala-2",
+            "/home/ghj/chisel-project/Chisel-temple/src/main/java",
+            "/home/ghj/chisel-project/Chisel-temple/target/scala-2.12/src_managed/main"
         ],
         "dependencies": [
             
@@ -49,11 +49,11 @@
             "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/json4s/json4s-scalap_2.12/3.6.8/json4s-scalap_2.12-3.6.8.jar",
             "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/com/thoughtworks/paranamer/paranamer/2.8/paranamer-2.8.jar"
         ],
-        "out": "/home/ghj/chisel_project/Chisel-temple/.bloop/chisel-temple",
-        "classesDir": "/home/ghj/chisel_project/Chisel-temple/.bloop/chisel-temple/scala-2.12/classes",
+        "out": "/home/ghj/chisel-project/Chisel-temple/.bloop/chisel-temple",
+        "classesDir": "/home/ghj/chisel-project/Chisel-temple/.bloop/chisel-temple/scala-2.12/classes",
         "resources": [
-            "/home/ghj/chisel_project/Chisel-temple/src/main/resources",
-            "/home/ghj/chisel_project/Chisel-temple/target/scala-2.12/resource_managed/main"
+            "/home/ghj/chisel-project/Chisel-temple/src/main/resources",
+            "/home/ghj/chisel-project/Chisel-temple/target/scala-2.12/resource_managed/main"
         ],
         "scala": {
             "organization": "org.scala-lang",
@@ -74,7 +74,7 @@
                 "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/jline/jline/2.14.6/jline-2.14.6.jar",
                 "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/fusesource/jansi/jansi/1.12/jansi-1.12.jar"
             ],
-            "analysis": "/home/ghj/chisel_project/Chisel-temple/target/streams/compile/bloopAnalysisOut/_global/streams/inc_compile_2.12.zip",
+            "analysis": "/home/ghj/chisel-project/Chisel-temple/target/streams/compile/bloopAnalysisOut/_global/streams/inc_compile_2.12.zip",
             "setup": {
                 "order": "mixed",
                 "addLibraryToBootClasspath": true,
@@ -134,9 +134,9 @@
         "platform": {
             "name": "jvm",
             "config": {
-                "home": "/usr/lib/jvm/java-8-openjdk-amd64/jre",
+                "home": "/usr/lib/jvm/java-11-openjdk-amd64",
                 "options": [
-                    "-Duser.dir=/home/ghj/chisel_project/Chisel-temple"
+                    "-Duser.dir=/home/ghj/chisel-project/Chisel-temple"
                 ]
             },
             "mainClass": [

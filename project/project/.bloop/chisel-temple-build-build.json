@@ -2,15 +2,15 @@
     "version": "1.4.0",
     "project": {
         "name": "chisel-temple-build-build",
-        "directory": "/home/ghj/chisel_project/Chisel-temple/project/project",
-        "workspaceDir": "/home/ghj/chisel_project/Chisel-temple/project/project",
+        "directory": "/home/ghj/chisel-project/Chisel-temple/project/project",
+        "workspaceDir": "/home/ghj/chisel-project/Chisel-temple/project/project",
         "sources": [
-            "/home/ghj/chisel_project/Chisel-temple/project/project/src/main/scala",
-            "/home/ghj/chisel_project/Chisel-temple/project/project/src/main/scala-2.12",
-            "/home/ghj/chisel_project/Chisel-temple/project/project/src/main/scala-2",
-            "/home/ghj/chisel_project/Chisel-temple/project/project/src/main/java",
-            "/home/ghj/chisel_project/Chisel-temple/project/project/src/main/scala-sbt-1.0",
-            "/home/ghj/chisel_project/Chisel-temple/project/project/target/scala-2.12/sbt-1.0/src_managed/main"
+            "/home/ghj/chisel-project/Chisel-temple/project/project/src/main/scala",
+            "/home/ghj/chisel-project/Chisel-temple/project/project/src/main/scala-2.12",
+            "/home/ghj/chisel-project/Chisel-temple/project/project/src/main/scala-2",
+            "/home/ghj/chisel-project/Chisel-temple/project/project/src/main/java",
+            "/home/ghj/chisel-project/Chisel-temple/project/project/src/main/scala-sbt-1.0",
+            "/home/ghj/chisel-project/Chisel-temple/project/project/target/scala-2.12/sbt-1.0/src_managed/main"
         ],
         "dependencies": [
             
@@ -18,7 +18,7 @@
         "classpath": [
             "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/sbt/1.4.7/sbt-1.4.7.jar",
             "/home/ghj/.sbt/boot/scala-2.12.12/lib/scala-library.jar",
-            "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/sbt-bloop_2.12_1.0/1.4.8/sbt-bloop-1.4.8.jar",
+            "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/sbt-bloop_2.12_1.0/1.4.8-19-4d9f966b/sbt-bloop-1.4.8-19-4d9f966b.jar",
             "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/main_2.12/1.4.7/main_2.12-1.4.7.jar",
             "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/io_2.12/1.4.0/io_2.12-1.4.0.jar",
             "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/net/java/dev/jna/jna/5.5.0/jna-5.5.0.jar",
@@ -106,11 +106,11 @@
             "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/com/squareup/okio/okio/1.17.2/okio-1.17.2.jar",
             "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/config/1.3.3/config-1.3.3.jar"
         ],
-        "out": "/home/ghj/chisel_project/Chisel-temple/project/project/.bloop/chisel-temple-build-build",
-        "classesDir": "/home/ghj/chisel_project/Chisel-temple/project/project/.bloop/chisel-temple-build-build/scala-2.12/sbt-1.0/classes",
+        "out": "/home/ghj/chisel-project/Chisel-temple/project/project/.bloop/chisel-temple-build-build",
+        "classesDir": "/home/ghj/chisel-project/Chisel-temple/project/project/.bloop/chisel-temple-build-build/scala-2.12/sbt-1.0/classes",
         "resources": [
-            "/home/ghj/chisel_project/Chisel-temple/project/project/src/main/resources",
-            "/home/ghj/chisel_project/Chisel-temple/project/project/target/scala-2.12/sbt-1.0/resource_managed/main"
+            "/home/ghj/chisel-project/Chisel-temple/project/project/src/main/resources",
+            "/home/ghj/chisel-project/Chisel-temple/project/project/target/scala-2.12/sbt-1.0/resource_managed/main"
         ],
         "scala": {
             "organization": "org.scala-lang",
@@ -120,14 +120,14 @@
                 "-deprecation"
             ],
             "jars": [
-                "/home/ghj/.sbt/boot/scala-2.12.12/lib/scala-compiler.jar",
                 "/home/ghj/.sbt/boot/scala-2.12.12/lib/jline.jar",
-                "/home/ghj/.sbt/boot/scala-2.12.12/lib/scala-reflect.jar",
                 "/home/ghj/.sbt/boot/scala-2.12.12/lib/scala-library.jar",
+                "/home/ghj/.sbt/boot/scala-2.12.12/lib/scala-reflect.jar",
                 "/home/ghj/.sbt/boot/scala-2.12.12/lib/jansi.jar",
+                "/home/ghj/.sbt/boot/scala-2.12.12/lib/scala-compiler.jar",
                 "/home/ghj/.sbt/boot/scala-2.12.12/lib/scala-xml_2.12.jar"
             ],
-            "analysis": "/home/ghj/chisel_project/Chisel-temple/project/project/target/streams/compile/bloopAnalysisOut/_global/streams/inc_compile_2.12.zip",
+            "analysis": "/home/ghj/chisel-project/Chisel-temple/project/project/target/streams/compile/bloopAnalysisOut/_global/streams/inc_compile_2.12.zip",
             "setup": {
                 "order": "mixed",
                 "addLibraryToBootClasspath": true,
@@ -195,9 +195,9 @@
         "platform": {
             "name": "jvm",
             "config": {
-                "home": "/usr/lib/jvm/java-8-openjdk-amd64/jre",
+                "home": "/usr/lib/jvm/java-11-openjdk-amd64",
                 "options": [
-                    "-Duser.dir=/home/ghj/chisel_project/Chisel-temple/project/project"
+                    "-Duser.dir=/home/ghj/chisel-project/Chisel-temple/project/project"
                 ]
             },
             "mainClass": [
@@ -209,12 +209,12 @@
                 {
                     "organization": "ch.epfl.scala",
                     "name": "sbt-bloop",
-                    "version": "1.4.8",
+                    "version": "1.4.8-19-4d9f966b",
                     "configurations": "default",
                     "artifacts": [
                         {
                             "name": "sbt-bloop",
-                            "path": "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/sbt-bloop_2.12_1.0/1.4.8/sbt-bloop-1.4.8.jar"
+                            "path": "/home/ghj/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/sbt-bloop_2.12_1.0/1.4.8-19-4d9f966b/sbt-bloop-1.4.8-19-4d9f966b.jar"
                         }
                     ]
                 },

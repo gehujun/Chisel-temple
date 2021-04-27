@@ -17,8 +17,11 @@ class Mixer(n:Int) extends Module{
         
         val Start = Input(Bool())
         val Done  = Output(Bool())
+
+        // val softPredictions_test = Input(SInt(13.W))
     })    
-  
+    // val out_softpredictions = RegNext(RegNext(io.softPredictions_test))
+
     val y_reg = RegNext(io.y)
     val strech_prediction = Wire(Vec(n,SInt(16.W)))
     for(i <- 0 until n){
@@ -50,17 +53,19 @@ class Mixer(n:Int) extends Module{
     
     val pr = squash(sum(6)>>16) 
     // printf(" pr : %d\t",pr)
+    // printf(" pr : %d\t",pr)
     val pr_reg = RegInit(2047.U(12.W))
     pr_reg := Mux(updateSel,pr,pr_reg)
     io.out := pr_reg
 
-    val err  = ((y_reg<<12).asSInt - pr.asSInt) * 7.S
-    // printf(" error : %d\t",err)
+    val err  = ((io.y<<12).asUInt - pr.asUInt).asSInt * 7.S
+    // printf(" error : %d (y_reg): %d\t",err,(io.y<<12).asSInt)
     val change_weight = Wire(Vec(n,SInt(32.W)))
     for(i <- 0 until n){
         change_weight(i) := ((strech_prediction(i) * err + 0x8000.S)>>16) + weights(i)
         // printf("%d\t",change_weight(i))
     }
+    
     // printf("\n")
     when(updateSel){
         weight_buffer.write(io.cxt,change_weight)
