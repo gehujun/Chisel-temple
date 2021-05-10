@@ -54,10 +54,11 @@ class mixerTest(mixer : Mixer) extends PeekPokeTester(mixer){
         poke(mixer.io.predictions(5),fields(5).toInt.asSInt)
         poke(mixer.io.predictions(6),fields(6).toInt.asSInt)
         poke(mixer.io.cxt,fields(7).toInt.asUInt)
-        if(fields(8).toInt == 1) 
-            poke(mixer.io.y,1.U)
-        else
-            poke(mixer.io.y,0.U)
+        poke(mixer.io.y,fields(8).toInt.asUInt)
+        // if(fields(8).toInt == 1) 
+        //     poke(mixer.io.y,1.U)
+        // else
+        //     poke(mixer.io.y,0.U)
         if(peek(mixer.io.Done).toInt == 1)
             println("mixer's output is "+peek(mixer.io.out)+" cxt "+fields(7).toInt+" y "+fields(8).toInt+" software is : "+fields(9).toInt)
         step(2)

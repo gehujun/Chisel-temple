@@ -5,30 +5,48 @@ import chisel3._
 import chisel3.iotesters._
 import chisel3.iotesters.{Driver, PeekPokeTester}
 import java.nio.file.{Files, Paths}
+import scala.io.Source
 
-
-class stateMapCompressionTester(c: naiveCompression) extends PeekPokeTester(c)  {
+class stateMapCompressionTester(c: mixer_top) extends PeekPokeTester(c)  {
   var mode = true //Decompression=false，compression=true
   if(mode){
-    val byteArray = Files.readAllBytes(Paths.get("/home/ghj/lpaq1/test/hello.txt"))
+    val byteArray = Files.readAllBytes(Paths.get("/home/ghj/lpaq1/test/src/hello.txt"))
     //    val writer = new PrintWriter(new File("C:/Users/82459/Desktop/output.txt" ))
     val writer = new DataOutputStream(new FileOutputStream("/home/ghj/lpaq1/test/output/hello.lpaq1"))
+    val source = Source.fromFile("/home/ghj/lpaq1/test/output/predictions.txt")
+    val lines = source.getLines().toArray
 
     var flag = true
     var out : Long = 1
     var ioflag : Int = 1
     var wbyte : Byte = 0
 
+    var indexOfLines = 0
+
     for(b <- byteArray)
     {
       for(i <- 0 to 7) {
-        poke(c.io.start,true.B)
+        poke(c.io.Start,true.B)
         poke(c.io.mode, 0)
         poke(c.io.i, (b >> (7 - i)) & 1)
+        
+        val line = lines(indexOfLines)
+        val fields = line.trim.split("\t")
+        poke(c.io.predictions(0),fields(0).toInt.asSInt)
+        poke(c.io.predictions(1),fields(1).toInt.asSInt)
+        poke(c.io.predictions(2),fields(2).toInt.asSInt)
+        poke(c.io.predictions(3),fields(3).toInt.asSInt)
+        poke(c.io.predictions(4),fields(4).toInt.asSInt)
+        poke(c.io.predictions(5),fields(5).toInt.asSInt)
+        poke(c.io.predictions(6),fields(6).toInt.asSInt)
+        poke(c.io.cxt,fields(7).toInt.asUInt)
+
         step(1)
+
         while(peek(c.io.Done).toInt == 0){ //enable为bool的输出，true（1）代表完成了压缩流程，false（0）代表还未完成
           // poke(c.io.mode, 0)
           // poke(c.io.i, (b >> (7 - i)) & 1)
+          poke(c.io.Start,false.B)
           println("while")
           // poke(c.io.start,true.B)
           step(1)
@@ -48,6 +66,7 @@ class stateMapCompressionTester(c: naiveCompression) extends PeekPokeTester(c)  
 //        step(1)
         /* 这里的step我考虑了一下，应该删去，因为从上面的while循环出来之后的语句，压缩器实际上已经完成了一个压缩过程
         现在需要新的数据，开始新的压缩。如果还step(1)的话，就是用上一bit的数据又重新来了一遍，会一直重复*/
+        indexOfLines += 1
       }
     }
     var index = 3
@@ -97,7 +116,7 @@ class stateMapCompressionTester(c: naiveCompression) extends PeekPokeTester(c)  
         }
       }
       if(index <= byteArray.length){
-        poke(c.io.start,true.B)
+        poke(c.io.Start,true.B)
         poke(c.io.mode, 1)
         poke(c.io.x, x)
         step(1)
@@ -105,7 +124,7 @@ class stateMapCompressionTester(c: naiveCompression) extends PeekPokeTester(c)  
           println(" while ")
           poke(c.io.mode, 1)
           poke(c.io.x, x)
-          poke(c.io.start,true.B)
+          poke(c.io.Start,true.B)
           step(1)
         }
         println(" while done ")
@@ -134,7 +153,7 @@ class naiveCompressionTester extends ChiselFlatSpec {
                 "--target-dir", "test_run_dir/compression",
                 "--top-name", "naiveCompression_compre",
                 ),
-            () => new naiveCompression()
+            () => new mixer_top(7)
         ) {
             c => new stateMapCompressionTester(c)
         } should be(true)
@@ -147,6 +166,6 @@ object CompressionTest_v2 {
                 "--generate-vcd-output", "on",
                 "--target-dir", "test_run_dir/decompression",
                 "--top-name", "naiveCompression",
-                ),() => new naiveCompression())(c => new stateMapCompressionTester(c))) System.exit(1)
+                ),() => new mixer_top(7))(c => new stateMapCompressionTester(c))) System.exit(1)
   }
 }
