@@ -13,7 +13,7 @@ class ForwardingMemory() extends Module{
         
     })
 
-    val mem = SyncReadMem(256,UInt(32.W))
+    val mem = SyncReadMem(256,UInt(33.W))
 
     val wrDataReg = RegNext(io.wrData)
     val doForwardReg = RegNext(io.wrAddr === io.rdAddr 
@@ -93,10 +93,11 @@ class StateMap extends Module{
   val mulFac = dt(count)
   // val mulFac = 8.U
 
- 
-  val updateValue = (prediction_count + ((((io.y<<22)-prediction)>>3) * mulFac) & 0xfffffc00L.U) | newCount
-  
-  hashTable.io.wrData := updateValue
+  val changeValue = (((((io.y<<22)-prediction).asSInt>>3) * mulFac)).asSInt
+  val updateValue = (prediction_count.asSInt + changeValue).asUInt & 0xfffffc00L.U | newCount
+
+  printf("updateValue: %d mulFac: %d changeValue: %d ",updateValue>>20,mulFac,changeValue)
+  hashTable.io.wrData := updateValue.asUInt
   rdata := Mux(updateSel , updateValue , rdata)
 
   io.p := rdata >> 20
@@ -118,9 +119,19 @@ class StateMap extends Module{
     }
     is(stage2) {
       updateSel := false.B
-      stateReg := stage1
+      stateReg := idle
     }
   }
 
   io.Done := stateReg === stage2
+}
+
+object StateMap {
+  def apply(y:UInt,cx:UInt,start:Bool) : (UInt,Bool) = {
+    val sm = Module(new StateMap)
+    sm.io.y := y
+    sm.io.Start :=  start
+    sm.io.cx := cx
+    (sm.io.p,sm.io.Done)
+  }
 }

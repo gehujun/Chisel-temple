@@ -44,8 +44,7 @@ class stateMapCompressionTester(c: mixer_top) extends PeekPokeTester(c)  {
         step(1)
 
         while(peek(c.io.Done).toInt == 0){ //enable为bool的输出，true（1）代表完成了压缩流程，false（0）代表还未完成
-          // poke(c.io.mode, 0)
-          // poke(c.io.i, (b >> (7 - i)) & 1)
+
           poke(c.io.Start,false.B)
           println("while")
           // poke(c.io.start,true.B)

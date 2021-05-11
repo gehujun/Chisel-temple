@@ -14,18 +14,36 @@ class sseTest(apm:apmNoPipeline) extends PeekPokeTester(apm) {
 }
 
 class statemapTest(sm:StateMap) extends PeekPokeTester(sm){
-    poke(sm.io.cx,0)
-    poke(sm.io.y,1)
-    poke(sm.io.Start ,true.B)
-    for(i <-0 to 100){
-        step(1)
-        println("cycles "+ i + " : "+peek(sm.io.Done).toString+" prediction is "+ peek(sm.io.p))
-    }
-    
+    // poke(sm.io.cx,0)
+    // poke(sm.io.y,1)
+    // poke(sm.io.Start ,true.B)
+    // for(i <-0 to 100){
+    //     step(1)
+    //     println("cycles "+ i + " : "+peek(sm.io.Done).toString+" prediction is "+ peek(sm.io.p))
+    // }
+
+    val source = Source.fromFile("/home/ghj/lpaq1/output.txt")
+    val lines = source.getLines().toArray
+    poke(sm.io.Start,true.B)
+    for(line<-lines){
+        val fields = line.trim.split(" ")
+        val y = fields(0)
+        println("prediction bit : "+y)
+        for(i <- 0 until 7){
+            var index = 2*i +1
+            poke(sm.io.y,y.toInt.asUInt)
+            poke(sm.io.cx,fields(index).toInt.asUInt)
+            println("prediction cxt : "+fields(index))
+            step(1)
+            while(peek(sm.io.Done).toInt != 1){
+                step(1)
+            }
+            println("sm's output is "+peek(sm.io.p))
+        }
+    } 
 }
 
 class memTest(mem:ForwardingMemory) extends PeekPokeTester(mem){
-
 }
 
 class mixerTest(mixer : Mixer) extends PeekPokeTester(mixer){
@@ -63,7 +81,6 @@ class mixerTest(mixer : Mixer) extends PeekPokeTester(mixer){
             println("mixer's output is "+peek(mixer.io.out)+" cxt "+fields(7).toInt+" y "+fields(8).toInt+" software is : "+fields(9).toInt)
         step(2)
     }
-
 }
 
 object sseDriver extends App{
@@ -107,12 +124,12 @@ class sseDriver extends ChiselFlatSpec {
         iotesters.Driver.execute(
             Array(
                 "--generate-vcd-output", "on",
-                "--target-dir", "test_run_dir/mixer",
-                "--top-name", "mixer",
+                "--target-dir", "test_run_dir/statemap",
+                "--top-name", "statemap",
                 ),
-            () => new Mixer(7)
+            () => new StateMap()
         ) {
-            c => new mixerTest(c)
+            c => new statemapTest(c)
         } should be(true)
     }
 }
