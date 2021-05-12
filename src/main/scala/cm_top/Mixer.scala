@@ -89,7 +89,7 @@ class Mixer(n:Int) extends Module{
       }
       is(stage2) {
         updateSel := false.B
-        stateReg := stage1
+        stateReg := idle
       }
     }
 

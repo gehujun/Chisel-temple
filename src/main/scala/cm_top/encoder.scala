@@ -13,9 +13,9 @@ class encoder extends Module {
     val y = Output(UInt(1.W))
     val out = Output(UInt(32.W))
     val flag = Output(UInt(4.W))
-//    val xMidtest = Output(UInt(32.W))
-//    val x1test = Output(UInt(32.W))
-//    val x2test = Output(UInt(32.W))
+   val xMidtest = Output(UInt(32.W))
+   val x1test = Output(UInt(32.W))
+   val x2test = Output(UInt(32.W))
   })
   val p = Mux(io.pin === 0.U, 1.U, io.pin)
   val x1 = Reg(UInt(32.W))
@@ -40,9 +40,9 @@ class encoder extends Module {
   //  val x2 = RegInit("hffffffff".U(32.W))
   //  val x = RegInit(0.U(32.W)) //不要用RegInit，这个会每次都初始化
   val xMid = x1 + ((x2 - x1) >> 12) * p + (((x2 - x1) & 0xfff.U) * p >> 12)
-//  io.xMidtest := xMid
-//  io.x1test := x1
-//  io.x2test := x2
+ io.xMidtest := xMid
+ io.x1test := x1
+ io.x2test := x2
   io.y := Mux(io.mode === 1.U, io.x <= xMid, io.i)
 
   val x1Select = Mux(io.y === 0.U, xMid + 1.U, x1)

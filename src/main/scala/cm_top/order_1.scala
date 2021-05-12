@@ -64,7 +64,7 @@ class order_1 extends Module {
     is(idle) {
       when(io.start) {
         state := stage1
-        printf("idle : cp is %d, wd is %d\n", cp, stateTable(t0read * 2.U + io.y))
+        // printf("idle : cp is %d, wd is %d\n", cp, stateTable(t0read * 2.U + io.y))
         t0.write(cp, stateTable(t0read * 2.U + io.y))
         when(c0tmp < 256.U){ //c0tmp := c0 << 1 | io.y
           c0 := c0tmp
@@ -77,12 +77,12 @@ class order_1 extends Module {
       }
     }
     is(stage1) {
-      printf("stage1 : c0 is %d, cat is %d\n", c0, Cat(h0, c0(7, 0)))
+      // printf("stage1 : c0 is %d, cat is %d\n", c0, Cat(h0, c0(7, 0)))
       cp := Cat(h0, c0(7, 0))
       state := stage2
     }
     is(stage2) {
-      printf("stage2 : p is %d\n", io.p)
+      // printf("stage2 : p is %d\n", io.p)
       io.done := true.B
       state := idle
     }

@@ -121,7 +121,7 @@ class order(N : Int) extends Module {
       when(io.start === false.B){
         state := idle
       } .otherwise{
-//        rount := rount + 1.U
+
         state := stage1
         //cache更新
         cache1(cp) := stateTable(cache1(cp) * 2.U + io.y)
@@ -142,7 +142,7 @@ class order(N : Int) extends Module {
           cp := cp + ((io.y + 1.U(2.W)) << ((bcounttmp & 3.U) - 1.U))
         }
       }
-    }
+    }    
     is(stage1){
       when(bcount === 4.U || bcount === 0.U){ //bcount不可能等于8，等于8的情况在这里对应的是等于0
         state := stage2
@@ -155,7 +155,7 @@ class order(N : Int) extends Module {
           hashtable.io.wrAddr3 := index(2)
           hashtable.io.wrAddr4 := index(3)
           hashtable.io.wrAddr5 := index(4)
-//          printf("write index is %x, %x, %x, %x, %x\n", index(0), index(1), index(2), index(3), index(4))
+
           hashtable.io.wrData1 := Cat(cache1(15), cache1(14), cache1(13), cache1(12), cache1(11), cache1(10), cache1(9),
             cache1(8), cache1(7), cache1(6), cache1(5), cache1(4), cache1(3), cache1(2), cache1(1), cache1(0))
           hashtable.io.wrData2 := Cat(cache2(15), cache2(14), cache2(13), cache2(12), cache2(11), cache2(10), cache2(9),

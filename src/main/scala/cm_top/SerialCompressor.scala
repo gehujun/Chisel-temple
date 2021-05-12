@@ -11,19 +11,20 @@ class SerialCompressor extends Module{
     val i = Input(UInt(1.W))
     val mode = Input(UInt(1.W))
     val x = Input(UInt(32.W))
+
     val y = Output(UInt(1.W))
     val out = Output(UInt(32.W))
     val flag = Output(UInt(4.W))
 
     val start = Input(Bool())
     val Done = Output(Bool())
-//    val xMid = Output(UInt(32.W))
-//    val x1 = Output(UInt(32.W))
-//    val x2 = Output(UInt(32.W))
+   val xMid = Output(UInt(32.W))
+   val x1 = Output(UInt(32.W))
+   val x2 = Output(UInt(32.W))
   })
 
   val pr = RegInit(2048.U)
-  printf("asdasqer\n");
+  // printf("asdasqer\n");
   val encode = Module(new encoder)
   encode.io.pin     := pr
   encode.io.i       := io.i
@@ -31,30 +32,36 @@ class SerialCompressor extends Module{
   encode.io.x       := io.x
   encode.io.renable := io.start
 
+  //test
+  io.xMid := encode.io.xMidtest
+  io.x1 := encode.io.x1test
+  io.x2 := encode.io.x2test
+
+
   //val y_reg     = RegNext(encode.io.y)
   val out_reg   = RegInit(0.U(32.W))
   val flag_reg  = RegInit(0.U(4.W))
   out_reg := Mux(encode.io.wenable,encode.io.out,out_reg)
   flag_reg := Mux(encode.io.wenable,encode.io.flag,flag_reg)
 
-
+  printf("y: %d prediction is : %d ",encode.io.y,pr)
 
 /**
-  * MODEL : order1 oder2......5 match model
+  * MODEL : order1 oder2......order5 match model
   * 
   */
  
   val order1Modle = Module(new order_1)
   order1Modle.io.y      := encode.io.y
   order1Modle.io.start  := encode.io.wenable
-  val (pr1,done1) = StateMap(encode.io.y,order1Modle.io.p, order1Modle.io.done)
+  // val (pr1,done1) = StateMap(encode.io.y,order1Modle.io.p, order1Modle.io.done)
 
-  // val pr1 = 0.U
-  // val done1 = true.B
+  val pr1 = 2048.U
+  val done1 = true.B
 
-  val highOrderModule = Module(new order(2048))
-  highOrderModule.io.y      := encode.io.y
-  highOrderModule.io.start  := encode.io.wenable
+  // val highOrderModule = Module(new order(2048))
+  // highOrderModule.io.y      := encode.io.y
+  // highOrderModule.io.start  := encode.io.wenable
   // highOrderModule.io.y      := 1.U
   // highOrderModule.io.start  := true.B
   
@@ -89,38 +96,42 @@ class SerialCompressor extends Module{
   // val pr6       = sm5.io.p
   // val done6     = sm5.io.Done
 
-  // val syn_reg = Module(new synReg)
-  // syn_reg.io.pr1 := pr1
-  // syn_reg.io.pr2 := pr2
-  // syn_reg.io.pr3 := pr3
-  // syn_reg.io.pr4 := pr4
-  // syn_reg.io.pr5 := pr5
-  // syn_reg.io.pr6 := pr6
-  // syn_reg.io.pr7 := 2047.U
-  // syn_reg.io.done1 := done1
-  // syn_reg.io.done2 := done2
+  // val pr1 = 2048.U
+  // val done1 = true.B
 
-  
-  io.Done := true.B
-  io.y := 1.U
-  io.flag := 1.U
-  io.out := 1.U
+  val pr2 = 2048.U
+  val pr3 = 2048.U
+  val pr4 = 2048.U
+  val pr5 = 2048.U
+  val pr6 = 2048.U
+  val done2 = true.B
+
+  val syn_reg = Module(new synReg)
+  syn_reg.io.pr1 := pr1
+  syn_reg.io.pr2 := pr2
+  syn_reg.io.pr3 := pr3
+  syn_reg.io.pr4 := pr4
+  syn_reg.io.pr5 := pr5
+  syn_reg.io.pr6 := pr6
+  syn_reg.io.pr7 := 2047.U
+  syn_reg.io.done1 := done1
+  syn_reg.io.done2 := done2
   
 /**
-  * MIXER :
+  * MIXER :c
   *   input Vec predictions cxt y
   *   output pr
   */
-  // val mixer = Module(new Mixer(7))
-  // mixer.io.predictions  := syn_reg.io.predictions
-  // mixer.io.cxt          := 0.U
-  // mixer.io.y            := encode.io.y
-  // mixer.io.Start        := syn_reg.io.done
+  val mixer = Module(new Mixer(7))
+  mixer.io.predictions  := syn_reg.io.predictions
+  mixer.io.cxt          := 0.U
+  mixer.io.y            := encode.io.y
+  mixer.io.Start        := syn_reg.io.done
 
-  // pr := Mux(mixer.io.Done,mixer.io.out,pr)
-  // io.out := Mux(mixer.io.Done,out_reg,0.U)
-  // io.flag := Mux(mixer.io.Done,flag_reg,0.U)
-  // io.Done := mixer.io.Done
-  // io.y := encode.io.y
+  pr := Mux(mixer.io.Done,mixer.io.out,pr)
+  io.out := Mux(mixer.io.Done,out_reg,0.U)
+  io.flag := Mux(mixer.io.Done,flag_reg,0.U)
+  io.Done := mixer.io.Done
+  io.y := encode.io.y
 
 }

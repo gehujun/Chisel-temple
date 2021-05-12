@@ -17,6 +17,12 @@ class hello extends Module{
  io.c := io.a & io.b
 
  val uselesswire = UInt(10.W)
-
+//  when(io.a === 9.U){
+//      io.c := io.a
+//  }.otherwise{
+//      for(i <- (0.U).toInt to 10){
+//         io.c := io.a + io.b +i.asUInt
+//      }
+//  }
 }
 

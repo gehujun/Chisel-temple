@@ -96,7 +96,7 @@ class StateMap extends Module{
   val changeValue = (((((io.y<<22)-prediction).asSInt>>3) * mulFac)).asSInt
   val updateValue = (prediction_count.asSInt + changeValue).asUInt & 0xfffffc00L.U | newCount
 
-  printf("updateValue: %d mulFac: %d changeValue: %d ",updateValue>>20,mulFac,changeValue)
+  // printf("updateValue: %d mulFac: %d changeValue: %d ",updateValue>>20,mulFac,changeValue)
   hashTable.io.wrData := updateValue.asUInt
   rdata := Mux(updateSel , updateValue , rdata)
 
