@@ -75,8 +75,9 @@ class SerialCompressorTester(c: SerialCompressor) extends PeekPokeTester(c) {
   }
   else{
     val byteArray = Files.readAllBytes(Paths.get("/home/ghj/lpaq1/test/output/hello.lpaq1"))
+    val originSize = Files.readAllBytes(Paths.get("/home/ghj/lpaq1/test/src/hello.txt"))
     //    val writer = new PrintWriter(new File("C:/Users/82459/Desktop/decompress.txt" ))
-    val writer = new DataOutputStream(new FileOutputStream("/home/ghj/lpaq1/test/output/hello.dlpaq1"))
+    val writer = new DataOutputStream(new FileOutputStream("/home/ghj/lpaq1/test/output/hello.out"))
     var x : Int = 0
     var ioflag : Int = 0xf
     var bInt : Int = 0
@@ -86,7 +87,8 @@ class SerialCompressorTester(c: SerialCompressor) extends PeekPokeTester(c) {
     var bitindex : Int = 0
     var rbyte : Byte = 0
     var wbyte : Int = 0
-    while(index <= byteArray.length) {
+    var count : Int = 0
+    while(count <= 8*originSize.length) {
       while(((ioflag >> 3) & 1) == 1){
         //        b = byteArray(index)
         if(index < byteArray.length){
@@ -123,6 +125,7 @@ class SerialCompressorTester(c: SerialCompressor) extends PeekPokeTester(c) {
         wbyte = (wbyte << 1) | peek(c.io.y).toInt
         bitindex += 1
         ioflag = peek(c.io.flag).toInt
+        count += 1
 
         if(bitindex == 8){
           writer.write(wbyte.toByte)
