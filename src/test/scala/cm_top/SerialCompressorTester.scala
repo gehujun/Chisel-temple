@@ -29,6 +29,7 @@ class SerialCompressorTester(c: SerialCompressor) extends PeekPokeTester(c) {
           poke(c.io.mode, 0)
           poke(c.io.i, (b >> (7 - i)) & 1)
           poke(c.io.start,false)
+          println("in circle ")
           step(1)
         }
         println(" ")

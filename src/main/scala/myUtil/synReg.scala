@@ -17,6 +17,7 @@ class synReg extends Module{
 
     val done1 = Input(Bool())
     val done2 = Input(Bool())
+    val done3 = Input(Bool())
 
     val predictions = Output(Vec(7,SInt(13.W)))
     val done = Output(Bool())
@@ -24,7 +25,7 @@ class synReg extends Module{
 
   val done1_reg = RegInit(false.B)
   val done2_reg = RegInit(false.B)
-
+  val done3_reg = RegInit(false.B)
   
   when(io.done1){
     done1_reg := true.B;
@@ -42,6 +43,21 @@ class synReg extends Module{
     done2_reg := done2_reg
   }
 
-  io.done       := done1_reg && done2_reg
-  io.predictions := VecInit(io.pr1.asSInt,io.pr2.asSInt,io.pr3.asSInt,io.pr4.asSInt,io.pr5.asSInt,io.pr6.asSInt,io.pr7.asSInt)
+  done3_reg := Mux(io.done3,true.B,
+                Mux(io.done,false.B,
+                  done3_reg))
+
+  io.done       := done1_reg && done2_reg && done3_reg
+  // io.predictions := VecInit(io.pr1.asSInt,io.pr2.asSInt,io.pr3.asSInt,io.pr4.asSInt,io.pr5.asSInt,io.pr6.asSInt,io.pr7.asSInt)
+
+  // to do list: use stretch function ture the predictions to -2048-2048
+
+  io.predictions(0) := stretch(io.pr1)
+  io.predictions(1) := stretch(io.pr2)
+  io.predictions(2) := stretch(io.pr3)
+  io.predictions(3) := stretch(io.pr4)
+  io.predictions(4) := stretch(io.pr5)
+  io.predictions(5) := stretch(io.pr6)
+  io.predictions(6) := stretch(io.pr7)
+
 }

@@ -50,13 +50,17 @@ class stretchTests(s:stretch) extends PeekPokeTester(s){
 
   val table =  ScalaStrectch()
 
-  for(i<-0 to 4096){
-    print(table(i)+" ")
-  }
-  // for(p <- 0 to 4096){
-  //   poke(s.io.p,p.asSInt)
-  //   expect(s.io.d,table(p))
+  // for(i<-0 to 4096){
+  //   print(table(i)+" ")
   // }
+
+  for(p <- 0 until 4096){
+    poke(s.io.p,p.asUInt)
+    expect(s.io.d,table(p))
+  }
+
+  // poke(s.io.p,1.U)
+
 
 }
 
@@ -74,4 +78,19 @@ object stretchTester extends App{
   // for(lines <- Source.fromFile("/home/ghj/lpaq1/test/hello.txt").getLines()){
   //   println(lines)
   // }
+}
+
+class stretchTester extends ChiselFlatSpec {
+      "running with --generate-vcd-output on" should "create a vcd file from your test" in {
+        iotesters.Driver.execute(
+            Array(
+                "--generate-vcd-output", "off",
+                "--target-dir", "test_run_dir/strecth",
+                "--top-name", "strecth",
+                ),
+            () => new stretch()
+        ) {
+            c => new stretchTests(c)
+        } should be(true)
+    }
 }

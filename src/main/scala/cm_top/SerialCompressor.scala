@@ -4,7 +4,7 @@ import chisel3._
 import chisel3.util._
 import chisel3.util.experimental.loadMemoryFromFile
 import myUtil.synReg
-import java.beans.Encoder
+// import java.beans.Encoders
 
 class SerialCompressor extends Module{
   val io = IO(new Bundle {
@@ -107,6 +107,13 @@ class SerialCompressor extends Module{
   val pr6 = 2048.U
   val done2 = true.B
 
+  // val matchModel = Module(new MatchModel)
+  // matchModel.io.inY := y_reg
+  // matchModel.io.start := encode.io.wenable
+  // val pr7 = matchModel.io.toMadd
+  val pr7 = 2048.U
+  // val done3 = matchModel.io.Dones
+
   val syn_reg = Module(new synReg)
   syn_reg.io.pr1 := pr1
   syn_reg.io.pr2 := pr2
@@ -114,9 +121,10 @@ class SerialCompressor extends Module{
   syn_reg.io.pr4 := pr4
   syn_reg.io.pr5 := pr5
   syn_reg.io.pr6 := pr6
-  syn_reg.io.pr7 := 2048.U
+  syn_reg.io.pr7 := pr7
   syn_reg.io.done1 := done1
   syn_reg.io.done2 := done2
+  syn_reg.io.done3 := true.B
   
 /**
   * MIXER :c

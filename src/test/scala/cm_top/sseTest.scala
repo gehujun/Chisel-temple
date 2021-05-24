@@ -83,6 +83,40 @@ class mixerTest(mixer : Mixer) extends PeekPokeTester(mixer){
     }
 }
 
+class order1Tester(order : order_1) extends PeekPokeTester(order){
+    var count = 0
+    val source = Source.fromFile("/home/ghj/lpaq1/oder1_output.txt")
+    val lines = source.getLines().toArray
+    poke(order.io.start,true.B)
+    for(line<-lines){
+        val fields = line.trim.split(" ")
+        poke(order.io.y, fields(0).toInt.asUInt)
+        while(peek(order.io.done)==0){
+            step(1)
+        }
+        // expect(order.io.p,fields(1).toInt)
+    }
+}
+
+class matchmodelTester(_match : MatchModel) extends PeekPokeTester(_match){
+    val source = Source.fromFile("/home/ghj/lpaq1/match_output.txt")
+    val lines = source.getLines().toArray
+    poke(_match.io.start,true.B)
+    for(line<-lines){
+        val fields = line.trim.split(" ")
+        poke(_match.io.inY, fields(0).toInt.asUInt)
+        step(1)
+        while(peek(_match.io.Done)==0){
+            // poke(_match.io.start,false.B)
+            println("runing.....")
+            step(1)
+        }
+        println("one bit pass!")
+        // expect(_match.io.outcxt,fields(1).toInt)
+        // expect(_match.io.outcxt,fields(2).toInt)
+    }
+}
+
 object sseDriver extends App{
     //chisel3.Driver.execute(args,() => new APM(8))
     // chisel3.stage.ChiselStage.execute(() => new APM(8))
@@ -117,6 +151,9 @@ object sseDriver extends App{
 
     // chisel3.iotesters.Driver.execute(args,() => new Mixer(7)) (c => new mixerTest(c))
 
+
+
+
 }
 
 class sseDriver extends ChiselFlatSpec {
@@ -124,12 +161,12 @@ class sseDriver extends ChiselFlatSpec {
         iotesters.Driver.execute(
             Array(
                 "--generate-vcd-output", "on",
-                "--target-dir", "test_run_dir/statemap",
-                "--top-name", "statemap",
+                "--target-dir", "test_run_dir/match",
+                "--top-name", "match",
                 ),
-            () => new StateMap()
+            () => new MatchModel(1024)
         ) {
-            c => new statemapTest(c)
+            c => new matchmodelTester(c)
         } should be(true)
     }
 }

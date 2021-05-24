@@ -16,10 +16,9 @@ import scala.io.Source
 // class helloTest
 
 class helloTests(h:hello) extends PeekPokeTester(h){
-    // poke(h.io.a,0.U)
-    // poke(h.io.b,1.U)
-    // step(1)
-    // println("Result is: " + peek(h.io.c).toString)
+    for(i <- 0 to 10){
+        step(1)
+    }
    
 }
 
