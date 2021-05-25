@@ -45,9 +45,9 @@ class SerialCompressor extends Module{
   flag_reg := Mux(encode.io.wenable,encode.io.flag,flag_reg)
   y_reg := Mux(encode.io.wenable,encode.io.y,y_reg)
 
-  printf("y: %d prediction is : %d ",encode.io.y,pr)
+  printf("y: %d prediction is : %d \n",encode.io.y,pr)
 
-/**
+/** 
   * MODEL : order1 oder2......order5 match model
   * 
   */
@@ -56,7 +56,7 @@ class SerialCompressor extends Module{
   order1Modle.io.y      := y_reg
   order1Modle.io.start  := encode.io.wenable
   val (pr1,done1) = StateMap(y_reg,order1Modle.io.p, order1Modle.io.done)
-
+  // printf("order1's prediction : %d",pr1)
   // val pr1 = 2048.U
   // val done1 = true.B
 
@@ -100,18 +100,18 @@ class SerialCompressor extends Module{
   // val pr1 = 2048.U
   // val done1 = true.B
 
-  val pr2 = 2048.U
-  val pr3 = 2048.U
-  val pr4 = 2048.U
-  val pr5 = 2048.U
-  val pr6 = 2048.U
+  val pr2 = 0.U
+  val pr3 = 0.U
+  val pr4 = 0.U
+  val pr5 = 0.U
+  val pr6 = 0.U
   val done2 = true.B
 
   // val matchModel = Module(new MatchModel)
   // matchModel.io.inY := y_reg
   // matchModel.io.start := encode.io.wenable
   // val pr7 = matchModel.io.toMadd
-  val pr7 = 2048.U
+  val pr7 = 0.U
   // val done3 = matchModel.io.Dones
 
   val syn_reg = Module(new synReg)
@@ -137,10 +137,16 @@ class SerialCompressor extends Module{
   mixer.io.y            := y_reg
   mixer.io.Start        := syn_reg.io.done
 
-  pr := Mux(mixer.io.Done,mixer.io.out,pr)
-  io.out := Mux(mixer.io.Done,out_reg,0.U)
-  io.flag := Mux(mixer.io.Done,flag_reg,0.U)
-  io.Done := mixer.io.Done
-  io.y :=y_reg
+  val apm1 = Module(new APM(256))
+  apm1.io.pr := mixer.io.out
+  apm1.io.cx := 0.U
+  apm1.io.next_y := y_reg
+  apm1.io.Start   := mixer.io.Done
+
+  pr := Mux(apm1.io.Done,apm1.io.p,pr)
+  io.out := Mux(apm1.io.Done,out_reg,0.U)
+  io.flag := Mux(apm1.io.Done,flag_reg,0.U)
+  io.Done := apm1.io.Done
+  io.y := y_reg
 
 }

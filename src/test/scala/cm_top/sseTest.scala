@@ -5,13 +5,7 @@ import chisel3.iotesters._
 import chisel3.iotesters.{Driver,PeekPokeTester}
 import scala.io.Source
 
-class sseTest(apm:apmNoPipeline) extends PeekPokeTester(apm) {
-  poke(apm.io.cx,"b100".U)
-  poke(apm.io.pr,3000.U)
-  poke(apm.io.next_y,1.U)
-  poke(apm.io.dtNUm,100.U)
-  step(1)
-}
+
 
 class statemapTest(sm:StateMap) extends PeekPokeTester(sm){
     // poke(sm.io.cx,0)
@@ -117,10 +111,35 @@ class matchmodelTester(_match : MatchModel) extends PeekPokeTester(_match){
     }
 }
 
-object sseDriver extends App{
-    //chisel3.Driver.execute(args,() => new APM(8))
-    // chisel3.stage.ChiselStage.execute(() => new APM(8))
+class sseTest(apm:APM) extends PeekPokeTester(apm) {
+ val source = Source.fromFile("/home/ghj/lpaq1/sse_output.txt")
+    val lines = source.getLines().toArray
+    poke(apm.io.Start,true.B)
+    for(line<-lines){
+        val fields = line.trim.split(" ")
+        poke(apm.io.next_y,fields(0).toInt.asUInt)
+        poke(apm.io.cx,fields(1).toInt.asSInt)
+        poke(apm.io.pr,fields(2).toInt.asSInt)
+        // if(fields(8).toInt == 1) 
+        //     poke(mixer.io.y,1.U)
+        // else
+        //     poke(mixer.io.y,0.U)
 
+        // if(peek(apm.io.Done).toInt == 1){
+        //     // println("apm's output is "+peek(apm.io.p)+" cxt "+fields(7).toInt+" y "+fields(8).toInt+" software is : "+fields(9).toInt)
+        //     println("y : "+fields(0)+" apm's out should is: "+fields(3)+" my apm's is : "+peek(apm.io.p))
+        // }
+        step(1)
+        while(peek(apm.io.Done).toInt == 0){
+            step(1)
+        }
+        println("y : "+fields(0)+" apm's out should is: "+fields(3)+" my apm's is : "+peek(apm.io.p))
+        // step(2)
+    }
+}
+
+class apmInterfaceTester(c:apm_rinit) extends PeekPokeTester(c){
+    
     def ScalaSquash(d : Int) : Int = {
       var res = -1
       var t = Seq(1,2,3,6,10,16,27,45,73,120,194,310,488,747,1101,
@@ -134,26 +153,26 @@ object sseDriver extends App{
           res = (t(index)*(128-w)+t(index + 1)*w+64) >> 7
       }
       res
+  }
+
+    var N = 256*24
+    var table : Array[Int] = Array.fill(N)(0)
+    for(i <- 0 until N){
+        var p = ((i%24*2+1)*4096)/48-2048;
+        table(i) = ((ScalaSquash(p))<<20)+6;
+        poke(c.io.pr,0.U)
+        poke(c.io.cxt,i.U)
+        expect(c.io.out,table(i))
+        step(1)
     }
+}
 
-    def ScalaStrectch() :  Array[Int] = {
-        var t:Array[Int] = Array.fill(4096)(2047)
-        var pi = 0
-        for(x <- -2047 to 2047){
-        var i = ScalaSquash(x)
-        for(j <- pi to i){
-            t(j) = x
-        }      
-        pi = i+1
-        }
-        t 
-    }
+object sseDriver extends App{
+    //chisel3.Driver.execute(args,() => new APM(8))
+    // chisel3.stage.ChiselStage.execute(() => new APM(8))
 
-    // chisel3.iotesters.Driver.execute(args,() => new Mixer(7)) (c => new mixerTest(c))
-
-
-
-
+    chisel3.iotesters.Driver.execute(args,() => new APM(256)) (
+        c => new sseTest(c))
 }
 
 class sseDriver extends ChiselFlatSpec {
@@ -161,12 +180,12 @@ class sseDriver extends ChiselFlatSpec {
         iotesters.Driver.execute(
             Array(
                 "--generate-vcd-output", "on",
-                "--target-dir", "test_run_dir/match",
-                "--top-name", "match",
+                "--target-dir", "test_run_dir/apm",
+                "--top-name", "apm",
                 ),
-            () => new MatchModel(1024)
+            () => new APM(256)
         ) {
-            c => new matchmodelTester(c)
+            c => new sseTest(c)
         } should be(true)
     }
 }

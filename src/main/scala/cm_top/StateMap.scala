@@ -3,17 +3,16 @@ package cm_top
 import chisel3._
 import chisel3.util._
 
-class ForwardingMemory() extends Module{
+class ForwardingMemory(val n : Int) extends Module{
     val io = IO(new Bundle{
         val rdAddr = Input(UInt(16.W))
         val rdData = Output(UInt(32.W))
         val wrEna  = Input(Bool())
         val wrData = Input(UInt(32.W))
         val wrAddr = Input(UInt(16.W))
-        
     })
 
-    val mem = SyncReadMem(256,UInt(33.W))
+    val mem = SyncReadMem(n,UInt(33.W))
 
     val wrDataReg = RegNext(io.wrData)
     val doForwardReg = RegNext(io.wrAddr === io.rdAddr 
@@ -49,7 +48,6 @@ class SinglePortRAM extends Module{
   } .otherwise {
     io.rdData := DontCare
   }
-
 }
 
 class StateMap extends Module{
@@ -71,8 +69,11 @@ class StateMap extends Module{
   }
 
 //双接口读写RAM
-  val hashTable = Module(new ForwardingMemory())
-  hashTable.io.rdAddr := io.cx
+  val cxtIndex   = RegInit(0.U(32.W))
+  cxtIndex := Mux(updateSel,io.cx,cxtIndex)
+
+  val hashTable = Module(new ForwardingMemory(256))
+  hashTable.io.rdAddr := cxtIndex
   hashTable.io.wrEna := updateSel
   hashTable.io.wrAddr := cx
 //单接口RAM
@@ -95,11 +96,11 @@ class StateMap extends Module{
 
   val changeValue = (((((io.y<<22)-prediction).asSInt>>3) * mulFac)).asSInt
   val updateValue = (prediction_count.asSInt + changeValue).asUInt & 0xfffffc00L.U | newCount
-
+  
   // printf("updateValue: %d mulFac: %d changeValue: %d ",updateValue>>20,mulFac,changeValue)
   hashTable.io.wrData := updateValue.asUInt
   rdata := Mux(updateSel , updateValue , rdata)
-
+  
   io.p := rdata >> 20
 
   val idle :: stage1 :: stage2 :: Nil = Enum(3)

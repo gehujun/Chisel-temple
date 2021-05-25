@@ -8,7 +8,7 @@ import java.nio.file.{Files, Paths}
 import scala.io.Source
 
 class SerialCompressorTester(c: SerialCompressor) extends PeekPokeTester(c) {
-  var mode = true //Decompression=false，compression=true
+  var mode = false //Decompression=false，compression=true
   if(mode){
     val byteArray = Files.readAllBytes(Paths.get("/home/ghj/lpaq1/test/src/hello.txt"))
     //    val writer = new PrintWriter(new File("C:/Users/82459/Desktop/output.txt" ))
@@ -29,10 +29,10 @@ class SerialCompressorTester(c: SerialCompressor) extends PeekPokeTester(c) {
           poke(c.io.mode, 0)
           poke(c.io.i, (b >> (7 - i)) & 1)
           poke(c.io.start,false)
-          println("in circle ")
+          // println("in circle ")
           step(1)
         }
-        println(" ")
+        // println(" ")
         // poke(c.io.mode, 0)
         // poke(c.io.i, (b >> (7 - i)) & 1)
         // poke(c.io.start,true)
@@ -142,18 +142,18 @@ class SerialCompressorTester(c: SerialCompressor) extends PeekPokeTester(c) {
 }
 
 class SerialCompressionTestMain extends ChiselFlatSpec {
-      "running with --generate-vcd-output on" should "create a vcd file from your test" in {
-        iotesters.Driver.execute(
-            Array(
-                "--generate-vcd-output", "on",
-                "--target-dir", "test_run_dir/serialCompression",
-                "--top-name", "serialCompression",
-                ),
-            () => new SerialCompressor
-        ) {
-            c => new SerialCompressorTester(c)
-        } should be(true)
-    }
+    "running with --generate-vcd-output on" should "create a vcd file from your test" in {
+      iotesters.Driver.execute(
+          Array(
+              "--generate-vcd-output", "on",
+              "--target-dir", "test_run_dir/serialCompression",
+              "--top-name", "serialCompression",
+              ),
+          () => new SerialCompressor
+      ) {
+          c => new SerialCompressorTester(c)
+      } should be(true)
+  }
 }
 
 object SerialCompressionTestMain1 {
